@@ -1,25 +1,44 @@
 import React, { useState,useEffect } from "react";
+import { toast } from "react-toastify";
 import io from "socket.io-client";
+import { useNavigate } from "react-router-dom";
 
 const Chat = ({loginState,loginUser}) => {
+  const navigate =useNavigate();
   const [message, setMessage] = useState("");
   const [oldMessages,setOldMessages]=useState([]);
   const [socket,setSocket]=useState(null);
+  const token=localStorage.getItem('token');
   useEffect(() => {
-    const socket= io("http://127.0.0.1:5050");
+    const socket= io("http://127.0.0.1:5050",{ query: {
+      user_id: loginUser,
+    },auth: { token }});
     setSocket(socket);
-    socket.on("connect", () => {
-      console.log(socket.id);
-    });
-    socket.on("chat message", (message) => {
-      
-      console.log("chat message",message);
-    });
-    socket.on("recived message", (message) => {
-      setOldMessages((old)=>[...old,{id:socket.id,message}]);
-
-    });
+    if(loginState){
+      socket.on("connect", () => {
+        console.log(socket.id);
+      });
+      socket.on("chat message", (message) => {
+        console.log("chat message",message);
+      });
+      socket.on('join_user',(online_users)=>{
+        console.log(online_users)
+      });
+      socket.on("recived message", (message) => {
+        setOldMessages((old)=>[...old,{id:socket.id,message}]);
+  
+      });
+      socket.on("connect_error", (err) => {
+        toast.error(err.message);
+        navigate("/login");
+      });
+    }else{
+      toast.error("Please login first");
+      navigate("/login");
+    }
+    
     return () => {
+      socket.emit("offline",loginUser);
       socket.disconnect(); 
     };
   }, []);

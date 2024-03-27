@@ -31,16 +31,9 @@ const Login = ({setLoginState,setLoginUser}) => {
     }).catch((error)=>{
       console.log(error.response);
     });
-    // console.log(userLogin.getLoginStatus());
-    // console.log(userLogin.getLoginUser());
   }
   return (
     <>
-      {/* <input type="text" onChange={(e) => setMessage(e.target.value)} />{" "}
-      <button type="button" onClick={handleOnChat}>
-        send
-      </button> */}
-
       <div className="container d-flex justify-content-center align-items-center" style={{'height':'100vh'}}>
         <form className="row g-3 d-flex align-items-center flex-column " onSubmit={handleOnSubmit}>
         <div className="col-auto">
