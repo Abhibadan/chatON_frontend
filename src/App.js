@@ -1,5 +1,6 @@
 import React,{useEffect, useState} from "react";
 import { Routes, Route,useLocation,useNavigate } from "react-router-dom";
+import { Routes, Route,useLocation,useNavigate } from "react-router-dom";
 import Login from "./pages/Login";
 import Home from "./pages/Home";
 import Chat from "./pages/Chat";
@@ -14,6 +15,7 @@ function App() {
   console.log(user);
   return (
     <div className="App">
+      {!discard_route.includes(location.pathname)&&<Navbar user={user}/>}
       {!discard_route.includes(location.pathname)&&<Navbar user={user}/>}
       <ToastContainer />
       <Routes>
