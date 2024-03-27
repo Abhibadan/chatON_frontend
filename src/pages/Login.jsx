@@ -5,20 +5,19 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 const Login = () => {
   const navigation=useNavigate();
-  const [email,setEmail]=useState('');
+  const [phone,setphone]=useState('');
   const [password,setPassword]=useState('');
   
   const handleOnSubmit=(e)=>{
     e.preventDefault();
-    const email_regex=/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-    if(email==='' || !email_regex.test(email)){
-      return toast.warn("Please enter valid email");
+    if(phone==='' ){
+      return toast.warn("Please enter valid phone number");
     }else if(password===''){
       return toast.warn("Please enter your password");
     }
     axios.post(`${process.env.REACT_APP_BACKEND}/login`,
     {
-      email:email,
+      phone:phone,
       password:password
     }).then((response)=>{
       if(response.status===200){
@@ -28,7 +27,7 @@ const Login = () => {
         navigation('/chat')
       }
     }).catch((error)=>{
-      console.log(error.response);
+      toast.error(error.response.data.message);
     });
   }
   return (
@@ -41,16 +40,16 @@ const Login = () => {
             </span>
           </div>
           <div className="col-auto">
-            <label htmlFor="loginEmail" className="visually-hidden">
-              Email
+            <label htmlFor="loginphone" className="visually-hidden">
+              phone
             </label>
             <input
               type="text"
               className="form-control"
-              id="loginEmail"
-              placeholder="Email"
-              onChange={(e)=>{setEmail(e.target.value)}}
-              // value="email@example.com"
+              id="loginphone"
+              placeholder="phone"
+              onChange={(e)=>{setphone(e.target.value)}}
+              // value="phone@example.com"
             />
           </div>
           <div className="col-auto">
