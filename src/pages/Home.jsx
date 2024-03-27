@@ -1,6 +1,7 @@
-import React from 'react'
-import { NavLink } from 'react-router-dom'
-const Navbar=()=> {
+import React from 'react';
+import { NavLink } from 'react-router-dom';
+
+const Home=()=>{
   return (
     <>
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -19,13 +20,8 @@ const Navbar=()=> {
           <div className="collapse navbar-collapse" id="navbarNav">
             <ul className="navbar-nav">
               <li className="nav-item">
-                <NavLink to="/chat" className="nav-link active" aria-current="page">
-                  Chat
-                </NavLink>
-              </li>
-              <li className="nav-item">
-                <NavLink to="/test" className="nav-link">
-                  Test
+                <NavLink to="/login" className="nav-link active" aria-current="page">
+                  Login
                 </NavLink>
               </li>
               <li className="nav-item">
@@ -38,7 +34,7 @@ const Navbar=()=> {
         </div>
       </nav>
     </>
-  );
+  )
 }
 
-export default Navbar
+export default Home;
