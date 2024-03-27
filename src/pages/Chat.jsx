@@ -3,18 +3,19 @@ import { toast } from "react-toastify";
 import io from "socket.io-client";
 import { useNavigate } from "react-router-dom";
 
-const Chat = ({loginState,loginUser}) => {
+const Chat = () => {
   const navigate =useNavigate();
   const [message, setMessage] = useState("");
   const [oldMessages,setOldMessages]=useState([]);
   const [socket,setSocket]=useState(null);
   const token=localStorage.getItem('token');
+  const user=JSON.parse(localStorage.getItem('Auth'))||false;
   useEffect(() => {
     const socket= io("http://127.0.0.1:5050",{ query: {
-      user_id: loginUser,
+      user_id: user._id,
     },auth: { token }});
     setSocket(socket);
-    if(loginState){
+    if(user?._id && localStorage.hasOwnProperty('token')){
       socket.on("connect", () => {
         console.log(socket.id);
       });
@@ -38,7 +39,7 @@ const Chat = ({loginState,loginUser}) => {
     }
     
     return () => {
-      socket.emit("offline",loginUser);
+      socket.emit("offline",user._id);
       socket.disconnect(); 
     };
   }, []);

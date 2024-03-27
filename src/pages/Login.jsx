@@ -3,7 +3,7 @@ import io from "socket.io-client";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-const Login = ({setLoginState,setLoginUser}) => {
+const Login = () => {
   const navigation=useNavigate();
   const [email,setEmail]=useState('');
   const [password,setPassword]=useState('');
@@ -23,8 +23,7 @@ const Login = ({setLoginState,setLoginUser}) => {
     }).then((response)=>{
       if(response.status===200){
         localStorage.setItem('token',response.data.auth);
-        setLoginState(true);
-        setLoginUser(response.data.user._id);
+        localStorage.setItem('Auth',JSON.stringify(response.data.user));
         toast.success(response.data.message);
         navigation('/chat')
       }
