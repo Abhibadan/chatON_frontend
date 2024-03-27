@@ -1,6 +1,7 @@
 import React from 'react'
-import { NavLink } from 'react-router-dom'
-const Navbar=()=> {
+import { NavLink,useLocation } from 'react-router-dom'
+const Navbar=({user})=> {
+  const location=useLocation();
   return (
     <>
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -18,11 +19,16 @@ const Navbar=()=> {
           </button>
           <div className="collapse navbar-collapse" id="navbarNav">
             <ul className="navbar-nav">
-              <li className="nav-item">
+              
+              {user?._id && localStorage.hasOwnProperty('token')?<li className="nav-item">
                 <NavLink to="/chat" className="nav-link active" aria-current="page">
                   Chat
                 </NavLink>
-              </li>
+              </li>:<li className="nav-item">
+                <NavLink to="/login" className="nav-link active" aria-current="page">
+                  Login
+                </NavLink>
+              </li>}
               <li className="nav-item">
                 <NavLink to="/test" className="nav-link">
                   Test
