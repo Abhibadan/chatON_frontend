@@ -3,11 +3,10 @@ import { toast } from "react-toastify";
 import io from "socket.io-client";
 import { useNavigate } from "react-router-dom";
 
-const Chat = () => {
+const Chat = ({socket,setSocket}) => {
   const navigate =useNavigate();
   const [message, setMessage] = useState("");
   const [oldMessages,setOldMessages]=useState([]);
-  const [socket,setSocket]=useState(null);
   const token=localStorage.getItem('token');
   const user=JSON.parse(localStorage.getItem('Auth'))||false;
   const auth_check=user?._id && localStorage.hasOwnProperty('token');
@@ -15,37 +14,31 @@ const Chat = () => {
     setOldMessages((old)=>[...old,{id:socket.id,message}]);
   }
   useEffect(() => {
-    const socket= io("http://127.0.0.1:5050",{ query: {
-      user_id: user._id,
-    },auth: { token }});
-    setSocket(socket);
     if(user?._id && localStorage.hasOwnProperty('token')){
-      socket.on("connect", () => {
-        console.log(socket.id);
-      });
-      socket.on("chat message", (message) => {
-        console.log("chat message",message);
-      });
-      socket.on('join_user',(online_users)=>{
-        console.log(online_users)
-      });
-      socket.on("recived message",reciveMessage);
-      socket.on("connect_error", (err) => {
-        toast.error(err.message);
-        navigate("/login");
-      });
-      // socket.on("disconnect", () => {
-      //   socket.emit("offline",{user_id: user._id,socket_id:socket.id});
-      // });
+      if(socket!==null){
+      
+        socket.on("chat message", (message) => {
+          console.log("chat message",message);
+        });
+        socket.on('join_user',(online_users)=>{
+          console.log(online_users)
+        });
+        socket.on("recived message",reciveMessage);
+        socket.on("connect_error", (err) => {
+          toast.error(err.message);
+          navigate("/login");
+        });
+      }
+      
     }else{
       toast.error("Please login first");
       navigate("/login");
     }
     
-    return () => {
-      socket.emit("offline",{user_id: user._id,socket_id:socket.id});
-      socket.disconnect(); 
-    };
+    // return () => {
+    //   socket.emit("offline",{user_id: user._id,socket_id:socket.id});
+    //   socket.disconnect(); 
+    // };
   }, []);
   console.log(oldMessages);
   const handleOnSubmit = (e) => {

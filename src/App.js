@@ -11,15 +11,15 @@ function App() {
   const navigate=useNavigate();
   const discard_route=['/login','/registration'];
   const user=JSON.parse(localStorage.getItem('Auth'))||false;
-  console.log(user);
+  const [socket,setSocket]=useState(null);
   return (
     <div className="App">
-      {!discard_route.includes(location.pathname)&&<Navbar user={user}/>}
+      {!discard_route.includes(location.pathname)&&<Navbar user={user} socket={socket} setSocket={setSocket}/>}
       <ToastContainer />
       <Routes>
         <Route path='/' element={<Home/>}/>
-        <Route path='/login' element={<Login/>}/>
-        <Route path='/chat' element={user?._id && localStorage.hasOwnProperty('token')?<Chat/>:<Login/>}/>
+        <Route path='/login' element={<Login socket={socket} setSocket={setSocket}/>}/>
+        <Route path='/chat' element={user?._id && localStorage.hasOwnProperty('token')?<Chat socket={socket} setSocket={setSocket}/>:<Login/>}/>
       </Routes>
     </div>
   );
