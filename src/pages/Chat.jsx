@@ -16,7 +16,7 @@ const Chat = ({socket,setSocket}) => {
   useEffect(() => {
     if(user?._id && localStorage.hasOwnProperty('token')){
       if(socket!==null){
-      
+        
         socket.on("chat message", (message) => {
           console.log("chat message",message);
         });

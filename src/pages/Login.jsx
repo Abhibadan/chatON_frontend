@@ -1,41 +1,33 @@
 import React, { useState, useEffect } from "react";
 import io from "socket.io-client";
-import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "../redux/user/userLogin";
 const Login = ({socket,setSocket}) => {
   const navigation=useNavigate();
-  const [phone,setphone]=useState('');
+  const dispatch=useDispatch();
+  const [email,setemail]=useState('');
   const [password,setPassword]=useState('');
   const user=JSON.parse(localStorage.getItem('Auth'));
   const handleOnSubmit=(e)=>{
     e.preventDefault();
-    if(phone==='' ){
-      return toast.warn("Please enter valid phone number");
+    if(email==='' ){
+      return toast.warn("Please enter valid email number");
     }else if(password===''){
       return toast.warn("Please enter your password");
     }
-    axios.post(`${process.env.REACT_APP_BACKEND}/login`,
-    {
-      phone:phone,
-      password:password
-    }).then((response)=>{
-      if(response.status===200){
-        localStorage.setItem('token',response.data.auth);
-        localStorage.setItem('Auth',JSON.stringify(response.data.user));
-        toast.success(response.data.message);
-        const newSocket = io("http://192.168.1.155:5050", {
+    dispatch(login({email,password})).then((response)=>{
+      if(response.type==="login/fulfilled"){
+        const newSocket = io(process.env.REACT_APP_SOCKET_BACKEND, {
           query: {
-            user_id: response.data.user._id,
+            user_id: response.payload.user._id,
           },
-          auth: { token:response.data.auth },
+          auth: { token:response.payload.auth },
         });
         setSocket(newSocket);
-        
-        navigation('/chat')
+        navigation('/chat');
       }
-    }).catch((error)=>{
-      toast.error(error.response.data.message);
     });
   }
   useEffect(()=>{
@@ -60,16 +52,16 @@ const Login = ({socket,setSocket}) => {
             </span>
           </div>
           <div className="col-auto">
-            <label htmlFor="loginphone" className="visually-hidden">
-              phone
+            <label htmlFor="loginemail" className="visually-hidden">
+              email
             </label>
             <input
               type="text"
               className="form-control"
-              id="loginphone"
-              placeholder="phone"
-              onChange={(e)=>{setphone(e.target.value)}}
-              // value="phone@example.com"
+              id="loginemail"
+              placeholder="email"
+              onChange={(e)=>{setemail(e.target.value)}}
+              // value="email@example.com"
             />
           </div>
           <div className="col-auto">
