@@ -19,8 +19,8 @@ const userLogin = createSlice({
       state.loginRequest = false;
       state.loginError = true;
       state.user = null;
-      state.userError = action.payload;
-      toast.warn(action.payload.message);
+      state.userError = action.error;
+      toast.error(action.error.message);
     }).addCase(login.fulfilled,(state, action) => {
       localStorage.setItem('Auth',JSON.stringify(action.payload.user));
       localStorage.setItem('token',JSON.stringify(action.payload.auth));
@@ -41,7 +41,7 @@ export const login =createAsyncThunk('login',async({email, password})=>{
     });
     return response.data;
   }catch(err){
-    return err.response.data;
+    throw err.response.data;
   }
   
 });

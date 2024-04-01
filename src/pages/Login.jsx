@@ -18,6 +18,7 @@ const Login = ({socket,setSocket}) => {
       return toast.warn("Please enter your password");
     }
     dispatch(login({email,password})).then((response)=>{
+      console.warn(response);
       if(response.type==="login/fulfilled"){
         const newSocket = io(process.env.REACT_APP_SOCKET_BACKEND, {
           query: {
