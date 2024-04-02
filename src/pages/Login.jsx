@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import io from "socket.io-client";
+import {io} from "socket.io-client";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -18,7 +18,6 @@ const Login = ({socket,setSocket}) => {
       return toast.warn("Please enter your password");
     }
     dispatch(login({email,password})).then((response)=>{
-      console.warn(response);
       if(response.type==="login/fulfilled"){
         const newSocket = io(process.env.REACT_APP_SOCKET_BACKEND, {
           query: {

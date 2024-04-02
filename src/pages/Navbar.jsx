@@ -1,14 +1,17 @@
 import React from 'react'
 import { NavLink,useLocation,useNavigate } from 'react-router-dom'
+
 const Navbar=({user,socket,setSocket})=> {
   const location=useLocation();
   const navigation=useNavigate();
   const logout=()=>{
+    if(socket!==null){
+      socket.emit("offline",{user_id: user._id,socket_id:socket.id});
+      socket.disconnect(); 
+      setSocket(null);
+    }
     localStorage.removeItem('token');
     localStorage.removeItem('Auth');
-    socket.emit("offline",{user_id: user._id,socket_id:socket.id});
-    socket.disconnect(); 
-    setSocket(null);
     navigation('/login');
   }
   return (

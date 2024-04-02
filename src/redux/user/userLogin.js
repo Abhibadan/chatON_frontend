@@ -23,7 +23,7 @@ const userLogin = createSlice({
       toast.error(action.error.message);
     }).addCase(login.fulfilled,(state, action) => {
       localStorage.setItem('Auth',JSON.stringify(action.payload.user));
-      localStorage.setItem('token',JSON.stringify(action.payload.auth));
+      localStorage.setItem('token',action.payload.auth);
       state.loginRequest = false;
       state.loginError = false;
       state.user = action.payload.user;

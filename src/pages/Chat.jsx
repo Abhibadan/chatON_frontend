@@ -40,7 +40,7 @@ const Chat = ({socket,setSocket}) => {
     //   socket.disconnect(); 
     // };
   }, []);
-  console.log(oldMessages);
+  // console.log(oldMessages);
   const handleOnSubmit = (e) => {
     e.preventDefault();
     if(message.length>0){

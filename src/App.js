@@ -5,13 +5,28 @@ import Home from "./pages/Home";
 import Chat from "./pages/Chat";
 import Navbar from "./pages/Navbar";
 import { ToastContainer } from "react-toastify";
+import  io  from "socket.io-client";
 import 'react-bootstrap';
 function App() {
   const location=useLocation();
   const navigate=useNavigate();
   const discard_route=['/login','/registration'];
   const user=JSON.parse(localStorage.getItem('Auth'))||false;
+  const token=localStorage.getItem('token');
   const [socket,setSocket]=useState(null);
+  useEffect(()=>{
+    if(user!==false && token!==null && socket===null ){
+      const newSocket = io(process.env.REACT_APP_SOCKET_BACKEND, {
+        reconnectionAttempts:3,
+        query: {
+          user_id: user._id,
+        },
+        auth: { token:token },
+      });
+      setSocket(newSocket);
+      console.warn(newSocket.id);
+    }
+  },[user,token]);
   return (
     <div className="App">
       {!discard_route.includes(location.pathname)&&<Navbar user={user} socket={socket} setSocket={setSocket}/>}
