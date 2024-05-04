@@ -1,5 +1,6 @@
 import React,{useEffect, useState} from "react";
 import { Routes, Route,useLocation,useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import Login from "./pages/Login";
 import Home from "./pages/Home";
 import Chat from "./pages/Chat";
@@ -22,6 +23,15 @@ function App() {
           user_id: user._id,
         },
         auth: { token:token },
+      });
+      newSocket.on("connect_error", (err) => {
+
+        toast.error(err.message);
+        newSocket.emit("offline",{user_id: user._id,socket_id:socket.id});
+        newSocket.disconnect();
+        localStorage.removeItem('token');
+        localStorage.removeItem('Auth');
+        navigate("/login");
       });
       setSocket(newSocket);
       console.warn(newSocket.id);

@@ -16,7 +16,6 @@ const Chat = ({socket,setSocket}) => {
   useEffect(() => {
     if(user?._id && localStorage.hasOwnProperty('token')){
       if(socket!==null){
-        
         socket.on("chat message", (message) => {
           console.log("chat message",message);
         });
@@ -24,8 +23,11 @@ const Chat = ({socket,setSocket}) => {
           console.log(online_users)
         });
         socket.on("recived message",reciveMessage);
+
         socket.on("connect_error", (err) => {
           toast.error(err.message);
+          localStorage.removeItem('token');
+          localStorage.removeItem('Auth');
           navigate("/login");
         });
       }
