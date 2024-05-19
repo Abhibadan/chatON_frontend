@@ -5,6 +5,7 @@ import Login from "./pages/Login";
 import Home from "./pages/Home";
 import Chat from "./pages/Chat";
 import Navbar from "./pages/Navbar";
+import Test from "./pages/Test";
 import { ToastContainer } from "react-toastify";
 import  io  from "socket.io-client";
 import 'react-bootstrap';
@@ -43,6 +44,7 @@ function App() {
       <ToastContainer />
       <Routes>
         <Route path='/' element={<Home/>}/>
+        <Route path='/test' element={<Test/>}/>
         <Route path='/login' element={<Login socket={socket} setSocket={setSocket}/>}/>
         <Route path='/chat' element={user?._id && localStorage.hasOwnProperty('token')?<Chat socket={socket} setSocket={setSocket}/>:<Login/>}/>
       </Routes>
