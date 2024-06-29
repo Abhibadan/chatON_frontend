@@ -26,7 +26,7 @@ const Login = ({socket,setSocket}) => {
           auth: { token:response.payload.auth },
         });
         setSocket(newSocket);
-        navigation('/chat');
+        navigation('/friends');
       }
     });
   }
@@ -36,7 +36,8 @@ const Login = ({socket,setSocket}) => {
     }
   },[user]);
   useEffect(()=>{
-    if(socket!==null){
+    if(socket!==null && socket!==undefined){
+      console.log(socket);
       socket.on("connect", () => {
         console.log(socket.id);
       });

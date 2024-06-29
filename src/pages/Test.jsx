@@ -16,7 +16,7 @@ const Test=() =>{
       console.log(jsEncrypt);
       const encryptedData = jsEncrypt.encrypt(JSON.stringify({
         friend_id:"65e33c56ca2a3030c32a766a",
-        handle:"accepted"
+        handle:"rejected"
         }));
       console.log(encryptedData);
       axios.post("http://localhost:5000/auth/handle-friend-request",{request:encryptedData},

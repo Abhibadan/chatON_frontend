@@ -32,11 +32,20 @@ const Navbar=({user,socket,setSocket})=> {
           <div className="collapse navbar-collapse" id="navbarNav">
             <ul className="navbar-nav">
               
-              {user?._id && localStorage.hasOwnProperty('token')?<li className="nav-item">
-                <NavLink to="/chat" className={`nav-link ${location.pathname=='/chat'?"active":""}`} aria-current="page">
-                  Chat
+              {user?._id && localStorage.hasOwnProperty('token')?
+              <>
+              <li className="nav-item">
+                <NavLink to="/friends" className={`nav-link ${location.pathname=='/friends'?"active":""}`} aria-current="page">
+                  FriendList
                 </NavLink>
-              </li>:<li className="nav-item">
+              </li>
+              <li className="nav-item">
+                <NavLink to="/users" className={`nav-link ${location.pathname=='/users'?"active":""}`} aria-current="page">
+                    UserList
+                </NavLink>
+              </li>
+              </>
+              :<li className="nav-item">
                 <NavLink to="/login" className={`nav-link ${location.pathname=='/login'?"active":""}`} aria-current="page">
                   Login
                 </NavLink>

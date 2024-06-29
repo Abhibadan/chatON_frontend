@@ -2,17 +2,18 @@ import React, { useState,useEffect } from "react";
 import { toast } from "react-toastify";
 import io from "socket.io-client";
 import { useNavigate } from "react-router-dom";
-
+import { useDispatch,useSelector } from "react-redux";
+import { addNewMessage,addOldMessage } from "../redux/user/messaging";
 const Chat = ({socket,setSocket}) => {
   const navigate =useNavigate();
+  const dispatch=useDispatch();
+  const messages=useSelector((state)=>state.messaging.message);
   const [message, setMessage] = useState("");
   const [oldMessages,setOldMessages]=useState([]);
   const token=localStorage.getItem('token');
   const user=JSON.parse(localStorage.getItem('Auth'))||false;
   const auth_check=user?._id && localStorage.hasOwnProperty('token');
-  const reciveMessage=(message)=>{
-    setOldMessages((old)=>[...old,{id:socket.id,message}]);
-  }
+  
   useEffect(() => {
     if(user?._id && localStorage.hasOwnProperty('token')){
       if(socket!==null){
@@ -55,11 +56,11 @@ const Chat = ({socket,setSocket}) => {
     <>
     <div className="container d-flex justify-content-center align-items-center" style={{'height':'100vh'}}>
       <div className="container d-flex flex-column justify-content-center align-items-center" style={{'height':'300px','width':'200px','overflowY':'scroll'}}>
-        {
+        {/* {
           oldMessages.map((data,index)=>(
             <span key={index}>{data.message}</span>
           ))
-        }
+        } */}
       </div>
         <form className="row g-3 d-flex align-items-center flex-column " onSubmit={handleOnSubmit}>
         <div className="col-auto">
@@ -75,8 +76,8 @@ const Chat = ({socket,setSocket}) => {
               className="form-control"
               id="chatInput"
               placeholder="Your Message .."
-              onChange={(e)=>{setMessage(e.target.value)}}
-              value={message}
+              // onChange={(e)=>{setMessage(e.target.value)}}
+              // value={message}
             />
           </div>
           

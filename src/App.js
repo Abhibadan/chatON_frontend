@@ -9,9 +9,14 @@ import Test from "./pages/Test";
 import { ToastContainer } from "react-toastify";
 import  io  from "socket.io-client";
 import 'react-bootstrap';
+import Friends from "./pages/Friends";
+import Allusers from "./pages/Allusers";
+import { addSocket,removeSocket,socketError } from "./redux/user/socketDetail";
+import { useDispatch,useSelector } from "react-redux";
 function App() {
   const location=useLocation();
   const navigate=useNavigate();
+  const dispatch=useDispatch();
   const discard_route=['/login','/registration'];
   const user=JSON.parse(localStorage.getItem('Auth'))||false;
   const token=localStorage.getItem('token');
@@ -47,6 +52,8 @@ function App() {
         <Route path='/test' element={<Test/>}/>
         <Route path='/login' element={<Login socket={socket} setSocket={setSocket}/>}/>
         <Route path='/chat' element={user?._id && localStorage.hasOwnProperty('token')?<Chat socket={socket} setSocket={setSocket}/>:<Login/>}/>
+        <Route path='/friends' element={user?._id && localStorage.hasOwnProperty('token')?<Friends/>:<Login/>}/>
+        <Route path='/users' element={user?._id && localStorage.hasOwnProperty('token')?<Allusers/>:<Login/>}/>
       </Routes>
     </div>
   );
