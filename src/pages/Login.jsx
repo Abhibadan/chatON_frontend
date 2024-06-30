@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {io} from "socket.io-client";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../redux/user/userLogin";
-const Login = ({socket,setSocket}) => {
+import { SocketContext } from "../SocketProvider";
+const Login = () => {
+  const {socket,setSocket}=useContext(SocketContext);
   const navigation=useNavigate();
   const dispatch=useDispatch();
   const [email,setemail]=useState('');

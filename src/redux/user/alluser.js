@@ -9,22 +9,6 @@ const users = createSlice({
     userlist: [],
     userlistError: null,
   },
-//   reducers: {
-//     updateUser(state, action) {
-//       state.user = { ...state.user, ...action.payload };
-//     },
-//     logout(state) {
-//       localStorage.removeItem('Auth');
-//       localStorage.removeItem('token');
-//       state.userRequest = false;
-//       state.userError = false;
-//       state.user = null;
-//       state.userlistError = null;
-//       state.profileRequest = false;
-//       state.profileError = false;
-//       state.profile = null;
-//     }
-//   },
   extraReducers: (builder) => {
     builder.addCase(userlist.pending, (state) => {
       state.userRequest = true;
@@ -38,8 +22,6 @@ const users = createSlice({
       state.userlistError = action.error;
       toast.error(action.error.message);
     }).addCase(userlist.fulfilled,(state, action) => {
-      localStorage.setItem('Auth',JSON.stringify(action.payload.user));
-      localStorage.setItem('token',action.payload.auth);
       state.userRequest = false;
       state.userError = false;
       state.userlist = action.payload.user;

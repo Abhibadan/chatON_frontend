@@ -1,10 +1,14 @@
-import React, { useState,useEffect } from "react";
+import React, { useState,useEffect, useContext } from "react";
 import { toast } from "react-toastify";
 import io from "socket.io-client";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,useLocation } from "react-router-dom";
 import { useDispatch,useSelector } from "react-redux";
 import { addNewMessage,addOldMessage } from "../redux/user/messaging";
-const Chat = ({socket,setSocket}) => {
+import { SocketContext } from "../SocketProvider";
+const Chat = () => {
+  const {socket,setSocket}=useContext(SocketContext);
+  const{state}=useLocation();
+  console.warn(state);
   const navigate =useNavigate();
   const dispatch=useDispatch();
   const messages=useSelector((state)=>state.messaging.message);
@@ -13,17 +17,18 @@ const Chat = ({socket,setSocket}) => {
   const token=localStorage.getItem('token');
   const user=JSON.parse(localStorage.getItem('Auth'))||false;
   const auth_check=user?._id && localStorage.hasOwnProperty('token');
-  
   useEffect(() => {
     if(user?._id && localStorage.hasOwnProperty('token')){
-      if(socket!==null){
-        socket.on("chat message", (message) => {
-          console.log("chat message",message);
+      if(socket!=null && socket!=undefined){
+        socket.on("chat message", () => {
+          console.log("chat message");
         });
         socket.on('join_user',(online_users)=>{
           console.log(online_users)
         });
-        socket.on("recived message",reciveMessage);
+        socket.on("recived message",(message)=>{
+          console.warn("message",message);
+        });
 
         socket.on("connect_error", (err) => {
           toast.error(err.message);
@@ -47,7 +52,7 @@ const Chat = ({socket,setSocket}) => {
   const handleOnSubmit = (e) => {
     e.preventDefault();
     if(message.length>0){
-      socket.emit('chat message', message);
+      socket.emit('chat message', {message,sender:user?._id,receiver:state.user_id});
       setMessage('');
     }
     
@@ -76,8 +81,8 @@ const Chat = ({socket,setSocket}) => {
               className="form-control"
               id="chatInput"
               placeholder="Your Message .."
-              // onChange={(e)=>{setMessage(e.target.value)}}
-              // value={message}
+              onChange={(e)=>{setMessage(e.target.value)}}
+              value={message}
             />
           </div>
           

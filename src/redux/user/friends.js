@@ -38,8 +38,6 @@ const friends = createSlice({
       state.friendlistError = action.error;
       toast.error(action.error.message);
     }).addCase(friend.fulfilled,(state, action) => {
-      localStorage.setItem('Auth',JSON.stringify(action.payload.user));
-      localStorage.setItem('token',action.payload.auth);
       state.frinesdRequest = false;
       state.friendError = false;
       state.friendlist = action.payload.user;

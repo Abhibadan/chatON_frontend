@@ -1,9 +1,10 @@
-import React from 'react'
+import React,{useContext} from 'react'
 import { NavLink,useLocation,useNavigate } from 'react-router-dom'
-
-const Navbar=({user,socket,setSocket})=> {
+import { SocketContext } from '../SocketProvider'
+const Navbar=({user})=> {
   const location=useLocation();
   const navigation=useNavigate();
+  const {socket,setSocket}=useContext(SocketContext);
   const logout=()=>{
     if(socket!==null){
       socket.emit("offline",{user_id: user._id,socket_id:socket.id});
