@@ -1,4 +1,5 @@
 import React,{useContext, useEffect, useState} from "react";
+import './App.css';
 import { Routes, Route,useLocation,useNavigate } from "react-router-dom";
 import { SocketContext } from "./SocketProvider";
 import { toast } from "react-toastify";
