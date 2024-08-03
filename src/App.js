@@ -26,7 +26,7 @@ function App() {
   useEffect(()=>{
     if(user!==false && token!==null && socket===null ){
       const newSocket = io(process.env.REACT_APP_SOCKET_BACKEND, {
-        reconnectionAttempts:3,
+        // reconnectionAttempts:3,
         query: {
           user_id: user._id,
         },
@@ -42,8 +42,16 @@ function App() {
         navigate("/login");
       });
       setSocket(newSocket);
-      console.warn(newSocket);
+      console.warn("app js",newSocket);
     }
+
+    // return ()=>{
+    //   console.log("unmount");
+    //   if(socket!==null && socket!==undefined){
+    //     socket.disconnect();
+    //     setSocket(null);
+    //   }
+    // }
   },[user,token]);
   return (
     <div className="App">

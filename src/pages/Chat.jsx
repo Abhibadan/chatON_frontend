@@ -15,7 +15,7 @@ const Chat = () => {
   const dispatch = useDispatch();
 
   const messageState = useSelector((state) => state.messaging);
-  console.warn(messageState);
+  
   const [message, setMessage] = useState("");
   const [oldMessages, setOldMessages] = useState([]);
   const token = localStorage.getItem("token");
@@ -24,6 +24,7 @@ const Chat = () => {
   useEffect(() => {
     dispatch(clearMessage());
     if (user?._id && localStorage.hasOwnProperty("token")) {
+      console.log("chat",socket);
       if (socket != null && socket != undefined) {
         socket.on("chat message", () => {
           console.log("chat message");
@@ -33,6 +34,7 @@ const Chat = () => {
         });
         socket.on("recived message", (message) => {
           console.warn("message", message);
+          dispatch(addNewMessage(message));
         });
 
         socket.on("connect_error", (err) => {
@@ -47,14 +49,14 @@ const Chat = () => {
       navigate("/login");
     }
     oldMessageHandler(dispatch, user?._id, state.user_id);
-    console.log(chatRef.current);
+    // console.log(chatRef.current);
     return () => {
+      console.log("unmount CHAT");
       dispatch(clearMessage());
-
       // socket.emit("offline",{user_id: user._id,socket_id:socket.id});
       // socket.disconnect();
     };
-  }, []);
+  }, [socket]);
   // console.log(oldMessages);
   const handleOnSubmit = (e) => {
     e.preventDefault();
@@ -64,6 +66,7 @@ const Chat = () => {
         sender: user?._id,
         receiver: state.user_id,
       });
+      dispatch(addNewMessage({ message, sender: true,sender_name:user?.first_name+" "+user?.last_name}));
       setMessage("");
     }
   };
