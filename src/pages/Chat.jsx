@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext,useRef } from "react";
 import { toast } from "react-toastify";
 import io from "socket.io-client";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -6,7 +6,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { addNewMessage, clearMessage } from "../redux/user/messaging";
 import { SocketContext } from "../SocketProvider";
 import oldMessageHandler from "../helper/oldMessage";
-import { useRef } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 const Chat = () => {
   const { socket, setSocket } = useContext(SocketContext);
   const { state } = useLocation();
@@ -49,14 +50,23 @@ const Chat = () => {
       navigate("/login");
     }
     oldMessageHandler(dispatch, user?._id, state.user_id);
-    // console.log(chatRef.current);
     return () => {
-      console.log("unmount CHAT");
       dispatch(clearMessage());
       // socket.emit("offline",{user_id: user._id,socket_id:socket.id});
       // socket.disconnect();
     };
   }, [socket]);
+
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messageState.message]);
+
+  const scrollToBottom = () => {
+    if (chatRef.current) {
+      chatRef.current.scrollTop = chatRef.current.scrollHeight;
+    }
+  };
   // console.log(oldMessages);
   const handleOnSubmit = (e) => {
     e.preventDefault();
@@ -75,37 +85,32 @@ const Chat = () => {
       <div className="container d-flex flex-column justify-content-center align-items-center" style={{ 'position': "relative", 'height': "100vh"}}>
         <div
           ref={chatRef}
-          className="row"
+          className="container p-2"
           style={{ 'height': "60vh",'width':'inherit', "overflow-y": "scroll" }}
         >
           {messageState.messageExist
             ? messageState.message.map((message, index) => {
                 return (
                   <div
-                    className="row g-3 d-flex align-items-center flex-column"
+                    className="row p-2 d-flex flex-column "
                     key={index}
+                    style={{'height': "auto",'width': "inherit"}}
                   >
-                    <div className="col-10">
-                      <span
-                        className="badge bg-secondary"
-                        style={
-                          message.sender
-                            ? { "background-color": "green" }
-                            : { "background-color": "blue" }
-                        }
-                      >
-                        {message?.sender_name}
-                        {message.message}
-                      </span>
+                    <div className={ message.sender?"col-10 align-self-end":"col-10 align-self-start"} style={{"background-color": message.sender?"green":"gray" ,'padding': "10px",'border-radius': "10px", 'color': "white"}}>
+                        <span className="d-flex flex-column" style={{'width': "inherit",'text-align': "left"}}>
+                        <p style={{'font-weight':"500",'height':'auto'}}> {message?.sender_name} </p>
+                        <p style={{'font-weight':"400",'height':'auto'}}>{message.message}</p>
+                        </span>
+                        
                     </div>
                   </div>
                 );
               })
             : null}
         </div>
-        <div className="row m-20 p-2 d-flex flex-column" style={{ "background-color": "blue"}}>
-          <form className="form-container" onSubmit={handleOnSubmit}>
-            <div className="col-auto">
+        <div className="container p-2" style={{"margin-top": "10px","width": "inherit","background-color": "#1b147d",'color': "white",'border-radius': "20px"}}>
+          <form className="row d-flex flex-row" style={{  "width": "inherit" }} onSubmit={handleOnSubmit}>
+            <div className="col-11" >
               <label htmlFor="chatInput" className="visually-hidden">
                 Your message
               </label>
@@ -113,15 +118,16 @@ const Chat = () => {
                 className="form-control"
                 id="chatInput"
                 placeholder="Your Message .."
+                style={{ "height": "100%",'width': "100%",'border-radius': "17px",'background-color': "transparent",'color': "white",'border': "none",'overflow':'hidden', 'resize': 'none'}}
                 onChange={(e) => {
                   setMessage(e.target.value);
                 }}
                 value={message}
               />
             </div>
-            <div className="col-auto">
-              <button type="submit" className="btn btn-primary mb-3">
-                Send
+            <div className="col-1 align-content-center" style={{ "height": "inherit"}}>
+              <button type="submit" className="btn" style={{'height': "inherit"}}>
+              <FontAwesomeIcon icon={faPaperPlane} style={{'height': "25px",'color': "white"}} />
               </button>
             </div>
           </form>
